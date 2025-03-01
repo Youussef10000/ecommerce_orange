@@ -64,4 +64,21 @@ class CartCubit extends Cubit<CartState> {
       totalPrice += product.quantity! * product.price!.toDouble();
     }
   }
+
+  Future<void> updateProductQuantity(String id, int newQuantity) async {
+    emit(CartLoading());
+
+    try {
+      await SQLHelper.updateQuantity(id, newQuantity);
+      final index = products.indexWhere((p) => p.id == id);
+      if (index != -1) {
+        products[index].quantity = newQuantity;
+        calculateTotalPrice();
+        emit(CartLoaded(products));
+      }
+    } catch (e) {
+      emit(CartError(e.toString()));
+    }
+  }
+
 }

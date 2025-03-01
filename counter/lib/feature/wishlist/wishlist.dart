@@ -16,7 +16,6 @@ class WishlistScreen extends StatelessWidget {
               leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            // ✅ Return to Home Screen when clicking back
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => HomeScreen()),

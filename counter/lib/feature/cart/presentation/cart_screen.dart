@@ -1,7 +1,7 @@
 import 'package:counter/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../order/order_screen.dart';
+import '../../order/order_Screen.dart';
 import '../logic/cart_cubit.dart';
 import '../../home/presentation/home_screen.dart';
 import '../../cart/data/model/product_cart_model.dart';
@@ -62,9 +62,41 @@ class CartScreen extends StatelessWidget {
                             product.title ?? "No Title",
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                           ),
-                          subtitle: Text(
-                            "\$${product.price?.toStringAsFixed(2) ?? "0.00"}",
-                            style: TextStyle(fontSize: 14, color: Colors.blue, fontWeight: FontWeight.bold),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "\$${product.price?.toStringAsFixed(2) ?? "0.00"}",
+                                style: TextStyle(fontSize: 14, color: Colors.blue, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 5),
+
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.remove, color: AppColor.buttonColor),
+                                    onPressed: () {
+                                      int currentQuantity = product.quantity ?? 1;
+                                      if (currentQuantity > 1) {
+                                        cartCubit.updateProductQuantity(product.id!, currentQuantity - 1);
+                                      } else {
+                                        cartCubit.deleteProduct(product.id!, index);
+                                      }
+                                    },
+                                  ),
+                                  Text(
+                                    "${product.quantity ?? 1}",
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.add, color: AppColor.buttonColor),
+                                    onPressed: () {
+                                      cartCubit.updateProductQuantity(product.id!, (product.quantity ?? 1) + 1);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                           trailing: IconButton(
                             icon: Icon(Icons.delete, color: Colors.red),
@@ -79,34 +111,44 @@ class CartScreen extends StatelessWidget {
                 ),
 
                 Container(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color:Colors.white,
+                    color: Colors.white,
                     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                    boxShadow: [BoxShadow(color: Colors.white, blurRadius: 5)],
+                    boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 5)],
                   ),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.buttonColor,
-                      padding: EdgeInsets.symmetric(vertical: 13,horizontal: 65),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                    onPressed: () {
-                      if (cartCubit.products.isNotEmpty) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OrderScreen(
-                              cartProducts: List.from(cartCubit.products),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Total Price: \$${cartCubit.totalPrice.toStringAsFixed(2)}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.buttonColor,
+                          padding: EdgeInsets.symmetric(vertical: 13, horizontal: 65),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OrderScreen(cartProducts: cartCubit.products),
                             ),
-                          ),
-                        );
-                      }
-                    },
-                    child: Text(
-                      "Checkout",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
+                          );
+                        },
+
+                        child: Text(
+                          "Checkout",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

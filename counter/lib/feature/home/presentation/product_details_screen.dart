@@ -27,7 +27,7 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   int quantity = 1;
-  String selectedColor = "Select color";
+  String selectedColor = "";
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final wishlistCubit = context.watch<WishlistCubit>();
     bool isFavorite = wishlistCubit.wishlist.any((item) => item.id == widget.title);
 
-    // ✅ Compute product price dynamically based on quantity
     double basePrice = double.tryParse(widget.price.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
-    double productPrice = basePrice * quantity; // ✅ Dynamically updated
+    double productPrice = basePrice * quantity;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -105,7 +104,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                   SizedBox(height: 15),
 
-                  // ✅ Price updates instantly
                   Center(
                     child: Text(
                       "\$${productPrice.toStringAsFixed(2)}",
@@ -130,21 +128,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                   SizedBox(height: 10),
 
-                  // ✅ Quantity Changer
 
 
                   Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
                       children: [
-                        _colorOption(Color(0xffA6A5AA), "Grey"),
-                        SizedBox(width: 10),
-                        _colorOption(Color(0xffE8E8EA), "White"),
-                        SizedBox(width: 10),
-                        _colorOption(Color(0xffF2E0CC), "Beige"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _colorOption(Color(0xffA6A5AA), "Grey"),
+                            SizedBox(width: 10),
+                            _colorOption(Color(0xffE8E8EA), "White"),
+                            SizedBox(width: 10),
+                            _colorOption(Color(0xffF2E0CC), "Beige"),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          selectedColor, // ✅ Displays the selected color name
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                   ),
+
                   Divider(height: 20, thickness: 2.5),
                   SizedBox(height: 15),
                   Text(
@@ -163,7 +170,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
 
                   SizedBox(height: 15,),
-                  // ✅ Product List (Scrollable)
+                  //
                   SizedBox(
                     height: 230,
                     width: MediaQuery.of(context).size.width - 50,

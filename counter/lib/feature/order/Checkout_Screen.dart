@@ -13,7 +13,7 @@ class CheckoutScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context); // Go back to Cart
+            Navigator.pop(context);
           },
         ),
       ),
@@ -36,7 +36,6 @@ class CheckoutScreen extends StatelessWidget {
             ),
             SizedBox(height: 30),
 
-            // ✅ Confirm Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
@@ -44,7 +43,7 @@ class CheckoutScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
               onPressed: () {
-                Navigator.pop(context); // Go back to Cart
+                Navigator.pop(context);
               },
               child: Text("Back to Cart", style: TextStyle(color: Colors.white, fontSize: 16)),
             ),
